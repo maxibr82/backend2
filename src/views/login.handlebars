@@ -1,12 +1,104 @@
-{{!-- filepath: views/login.handlebars --}}
-<h2>Iniciar Sesión</h2>
-<form id="loginForm">
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Contraseña" required>
-    <button type="submit" id="login-btn">Ingresar</button>
-</form>
-<div id="login-message" class="message"></div>
-<a href="/register">¿No tienes cuenta? Regístrate</a>
+<style>
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+  }
+  .login-center-container {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .user-login-box {
+    background: #181818;
+    padding: 32px 28px 24px 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px 0 rgba(0,0,0,0.5);
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInDown 1s;
+  }
+  .user-login-box h2 {
+    color: #ffa500;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  #loginForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #loginForm input {
+    padding: 12px;
+    border-radius: 7px;
+    border: none;
+    background: #222;
+    color: #fff;
+    font-size: 1em;
+    transition: background 0.2s;
+  }
+  #loginForm input:focus {
+    background: #333;
+    outline: 2px solid #ffa500;
+  }
+  #login-btn {
+    background: #ffa500;
+    color: #181818;
+    font-weight: bold;
+    border: none;
+    border-radius: 7px;
+    padding: 12px;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  #login-btn:hover {
+    background: #ffb733;
+  }
+  #login-message {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    min-height: 20px;
+    font-size: 1.1em;
+  }
+  .user-login-box a {
+    color: #ffa500;
+    margin-top: 18px;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 1em;
+    display: block;
+    transition: color 0.2s;
+  }
+  .user-login-box a:hover {
+    color: #fff;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+</style>
+
+<div class="login-center-container">
+  <div class="user-login-box">
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button type="submit" id="login-btn">Ingresar</button>
+    </form>
+    <div id="login-message" class="message"></div>
+    <a href="/register">¿No tienes cuenta? Regístrate</a>
+  </div>
+</div>
 <script>
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();

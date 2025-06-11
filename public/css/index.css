@@ -41,6 +41,7 @@ button, .button {
     flex-direction: column;
     padding: 10px;
     margin: 5px;
+    margin-top: 40px;
     border: 1px solid white;
 }
 

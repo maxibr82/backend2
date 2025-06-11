@@ -1,6 +1,7 @@
 <div class="box">
     <div class="view-products"><a id="button-products" class="button" href="/products">Volver</a></div>
     <h1>Productos</h1>
+    <button id="empty-cart-btn" class="button" style="background:#d51515;margin-bottom:15px;">Vaciar carrito</button>
     <div class="products-box">
         {{#each products}}
             <div class="product-card">
@@ -9,7 +10,9 @@
                 <p>Categoria: {{this.product.category}}</p>
                 <p>Precio: $ {{this.product.price}}</p>
                 <p>Cantidad: {{this.quantity}}</p>
+                <button class="remove-product-btn button" style="background:#d51515;" data-pid="{{this.product._id}}">Eliminar</button>
             </div>
         {{/each}}
     </div>
 </div>
+<script src="/js/cart.js"></script>

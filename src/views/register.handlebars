@@ -1,14 +1,103 @@
-{{!-- filepath: src/views/register.handlebars --}}
-<h2>Crear Usuario</h2>
-<form id="registerForm">
-    <input type="text" name="first_name" placeholder="Nombre" required>
-    <input type="text" name="last_name" placeholder="Apellido" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Contraseña" required>
-    <button type="submit" id="register-btn">Registrarse</button>
-</form>
-<div id="register-message" class="message"></div>
-<a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
+<style>
+  .register-center-container {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .user-register-box {
+    background: #181818;
+    padding: 32px 28px 24px 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px 0 rgba(0,0,0,0.5);
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInDown 1s;
+    transition: box-shadow 0.3s;
+  }
+  .user-register-box:hover {
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.7);
+  }
+  .user-register-box h2 {
+    color: #ffa500;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  #registerForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #registerForm input {
+    padding: 12px;
+    border-radius: 7px;
+    border: none;
+    background: #222;
+    color: #fff;
+    font-size: 1em;
+    transition: background 0.2s;
+  }
+  #registerForm input:focus {
+    background: #333;
+    outline: 2px solid #ffa500;
+  }
+  #register-btn {
+    background: #ffa500;
+    color: #181818;
+    font-weight: bold;
+    border: none;
+    border-radius: 7px;
+    padding: 12px;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  #register-btn:hover {
+    background: #ffb733;
+  }
+  #register-message {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    min-height: 20px;
+    font-size: 1.1em;
+  }
+  .user-register-box a {
+    color: #ffa500;
+    margin-top: 18px;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 1em;
+    display: block;
+    transition: color 0.2s;
+  }
+  .user-register-box a:hover {
+    color: #fff;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+</style>
+
+<div class="register-center-container">
+  <div class="user-register-box">
+    <h2>Crear Usuario</h2>
+    <form id="registerForm">
+        <input type="text" name="first_name" placeholder="Nombre" required>
+        <input type="text" name="last_name" placeholder="Apellido" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button type="submit" id="register-btn">Registrarse</button>
+    </form>
+    <div id="register-message" class="message"></div>
+    <a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
+  </div>
+</div>
 <script>
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
