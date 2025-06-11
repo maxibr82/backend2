@@ -1,0 +1,76 @@
+{{!-- filepath: src/views/index.handlebars --}}
+<div style="position:absolute;top:20px;right:40px;z-index:10;display:flex;gap:10px;align-items:center;">
+    <a href="/login" id="login-link" class="button">Iniciar Sesión</a>
+    <a href="/register" id="register-link" class="button">Registrarse</a>
+    <div id="user-info" class="user-info" style="display:none;flex-direction:row;align-items:center;gap:10px;">
+        <span id="user-welcome"></span>
+        <a id="button-cart" class="button" style="background:orange;display:none;margin-left:10px;">Ver Carrito</a>
+        <button id="logout-btn" style="margin-left:10px;">Cerrar sesión</button>
+    </div>
+</div>
+<div class="main-content">
+    <div class="products-section">
+        <h1>Productos Ecommerce Maxi</h1>
+        <div class="products-box">
+            {{#each products}}
+                <div class="product-card">
+                    <h3>{{this.title}}</h3>
+                    <hr>
+                    <p>Categoria: {{this.category}}</p>
+                    <p>Descripción: {{this.description}}</p>
+                    <p>Precio: $ {{this.price}}</p>
+                    <button id="button-create" onclick="addToCart('{{this._id}}')">Agregar al Carrito</button>
+                </div>
+            {{/each}}
+        </div>
+        <div class="footer">
+            {{#if prevLink.exist}}
+                <a id="button-paginate" class="button" href="{{prevLink.link}}">Anterior</a>
+            {{/if}}
+            {{#if nextLink.exist}}
+                <a id="button-paginate" class="button" href="{{nextLink.link}}">Siguiente</a>
+            {{/if}}
+        </div>
+    </div>
+</div>
+<script src="/js/ecommerce.js"></script>
+<script>
+function showButtonCart() {
+    const cartId = localStorage.getItem('cartId');
+    const buttonCart = document.querySelector('#button-cart');
+    if (cartId) {
+        buttonCart.setAttribute("href", `/cart/${cartId}`);
+        buttonCart.style.display = "inline-block";
+    } else {
+        buttonCart.style.display = "none";
+    }
+}
+
+// Mostrar usuario logueado y controlar visibilidad de botones
+function showUser() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userInfo = document.getElementById('user-info');
+    const welcome = document.getElementById('user-welcome');
+    const loginLink = document.getElementById('login-link');
+    const registerLink = document.getElementById('register-link');
+    if (user) {
+        userInfo.style.display = 'flex';
+        welcome.innerText = `Bienvenido, ${user.first_name} ${user.last_name} (${user.email})`;
+        loginLink.style.display = 'none';
+        registerLink.style.display = 'none';
+    } else {
+        userInfo.style.display = 'none';
+        loginLink.style.display = 'inline-block';
+        registerLink.style.display = 'inline-block';
+    }
+    showButtonCart();
+}
+showUser();
+
+document.getElementById('logout-btn').addEventListener('click', function() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('cartId');
+    showUser();
+    showButtonCart();
+});
+</script>

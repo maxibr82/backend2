@@ -1,0 +1,45 @@
+{{!-- filepath: views/login.handlebars --}}
+<h2>Iniciar Sesión</h2>
+<form id="loginForm">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <button type="submit" id="login-btn">Ingresar</button>
+</form>
+<div id="login-message" class="message"></div>
+<a href="/register">¿No tienes cuenta? Regístrate</a>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+        email: form.email.value,
+        password: form.password.value
+    };
+    const res = await fetch('/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    const msg = document.getElementById('login-message');
+    msg.style.display = 'block';
+    if(result.status === 'success') {
+        msg.innerText = 'Login exitoso';
+        msg.style.color = '#1da81d';
+        localStorage.setItem('user', JSON.stringify({
+            first_name: result.user?.first_name || '',
+            last_name: result.user?.last_name || '',
+            email: data.email,
+            cart: result.user?.cart || ''
+        }));
+        if(result.user?.cart) {
+            localStorage.setItem('cartId', result.user.cart);
+        }
+        form.reset();
+        window.location.href = "/products";
+    } else {
+        msg.innerText = result.message || 'Error al iniciar sesión';
+        msg.style.color = '#d51515';
+    }
+});
+</script>

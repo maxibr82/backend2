@@ -1,0 +1,40 @@
+{{!-- filepath: src/views/register.handlebars --}}
+<h2>Crear Usuario</h2>
+<form id="registerForm">
+    <input type="text" name="first_name" placeholder="Nombre" required>
+    <input type="text" name="last_name" placeholder="Apellido" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <button type="submit" id="register-btn">Registrarse</button>
+</form>
+<div id="register-message" class="message"></div>
+<a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
+<script>
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+        first_name: form.first_name.value,
+        last_name: form.last_name.value,
+        email: form.email.value,
+        password: form.password.value
+    };
+    const res = await fetch('/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    const msg = document.getElementById('register-message');
+    msg.style.display = 'block';
+    if(result.status === 'success') {
+        msg.innerText = 'Usuario creado correctamente';
+        msg.style.color = '#1da81d';
+        form.reset();
+        setTimeout(() => window.location.href = "/login", 1000);
+    } else {
+        msg.innerText = result.message || 'Error al crear usuario';
+        msg.style.color = '#d51515';
+    }
+});
+</script>
