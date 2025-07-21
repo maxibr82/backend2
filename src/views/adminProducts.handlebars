@@ -1,0 +1,680 @@
+<style>
+  body {
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .admin-header {
+    background: #181818;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .admin-header h1 {
+    color: #ffa500;
+    margin: 0;
+  }
+
+  .logout-btn {
+    background: #d51515;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .logout-btn:hover {
+    background: #ff4444;
+  }
+
+  .admin-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+  }
+
+  .product-form-section {
+    background: #181818;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .product-form-section h2 {
+    color: #ffa500;
+    margin-bottom: 20px;
+  }
+
+  .product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .product-form input, .product-form textarea {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .product-form input:focus, .product-form textarea:focus {
+    outline: 2px solid #ffa500;
+    background: #333;
+  }
+
+  .form-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+
+  .btn-primary {
+    background: #ffa500;
+    color: #181818;
+  }
+
+  .btn-primary:hover {
+    background: #ffb733;
+  }
+
+  .btn-secondary {
+    background: #666;
+    color: #fff;
+  }
+
+  .btn-secondary:hover {
+    background: #777;
+  }
+
+  .products-section {
+    background: #181818;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .products-section h2 {
+    color: #ffa500;
+    margin-bottom: 20px;
+  }
+
+  .products-grid {
+    display: grid;
+    gap: 15px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .product-card {
+    background: #222;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #ffa500;
+  }
+
+  .product-card h3 {
+    color: #ffa500;
+    margin: 0 0 10px 0;
+  }
+
+  .product-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .product-info p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-edit {
+    background: #1da81d;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-edit:hover {
+    background: #22c222;
+    transform: scale(1.05);
+  }
+
+  .btn-edit:active {
+    background: #ffa500;
+    transform: scale(0.95);
+  }
+
+  .btn-delete {
+    background: #d51515;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .btn-delete:hover {
+    background: #ff4444;
+  }
+
+  .message {
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .message.success {
+    background: #2d5a2d;
+    color: #90ee90;
+    border: 1px solid #4a7c4a;
+  }
+
+  .message.error {
+    background: #5a2d2d;
+    color: #ff6b6b;
+    border: 1px solid #7c4a4a;
+  }
+
+  .message.info {
+    background: #2d3d5a;
+    color: #87ceeb;
+    border: 1px solid #4a5a7c;
+  }  .hidden {
+    display: none;
+  }
+
+  /* Estilos para modo de edición in-line */
+  .product-edit {
+    padding: 15px;
+    background: #2a2a2a;
+    border: 2px solid #ffa500;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
+  }
+
+  .edit-field {
+    margin-bottom: 10px;
+  }
+
+  .edit-field label {
+    display: block;
+    color: #ffa500;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+
+  .edit-input, .edit-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ffa500;
+    border-radius: 4px;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .edit-input:focus, .edit-textarea:focus {
+    outline: none;
+    border-color: #ffcc00;
+    box-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
+  }
+
+  .edit-textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  .edit-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .edit-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .btn-save {
+    background: #28a745;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn-save:hover {
+    background: #34ce57;
+    transform: scale(1.05);
+  }
+
+  .btn-cancel {
+    background: #dc3545;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #e85d6d;
+    transform: scale(1.05);
+  }
+</style>
+
+<div class="admin-header">
+  <h1>Panel de Administración - Productos</h1>
+  <a href="/products" class="logout-btn">Volver al sitio</a>
+</div>
+
+<div class="admin-container">
+  <div class="product-form-section">
+    <h2 id="form-title">Crear Nuevo Producto</h2>
+    <div id="message" class="message hidden"></div>
+    
+    <form id="productForm" class="product-form">
+      <input type="hidden" id="productId" name="id">
+      <input type="text" id="title" name="title" placeholder="Título del producto" required>
+      <textarea id="description" name="description" placeholder="Descripción" rows="4" required></textarea>
+      <input type="text" id="code" name="code" placeholder="Código único" required>
+      <input type="number" id="price" name="price" placeholder="Precio" min="0" step="0.01" required>
+      <input type="number" id="stock" name="stock" placeholder="Stock disponible" min="0" required>
+      <input type="text" id="category" name="category" placeholder="Categoría" required>
+      <input type="url" id="thumbnail" name="thumbnail" placeholder="URL de imagen (opcional)">
+      
+      <div class="form-buttons">
+        <button type="submit" class="btn btn-primary" id="submit-btn">Crear Producto</button>
+        <button type="button" class="btn btn-secondary" id="cancel-btn" onclick="cancelEdit()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="products-section">
+    <h2>Lista de Productos</h2>
+    <div id="products-container" class="products-grid">
+      <!-- Los productos se cargarán aquí dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<script>
+let currentEditingId = null;
+
+// Función para obtener el token JWT
+function getAuthToken() {
+    return localStorage.getItem('authToken');
+}
+
+// Función para obtener headers con autenticación
+function getAuthHeaders() {
+    const token = getAuthToken();
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+    };
+}
+
+// Verificar autenticación al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user.role || user.role !== 'admin') {
+        alert('Acceso denegado. Se requieren permisos de administrador.');
+        window.location.href = '/login';
+        return;
+    }
+    loadProducts();
+});
+
+// Manejar envío del formulario
+document.getElementById('productForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const productData = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        code: formData.get('code'),
+        price: parseFloat(formData.get('price')),
+        stock: parseInt(formData.get('stock')),
+        category: formData.get('category')
+    };
+
+    // Agregar thumbnails si hay valor
+    const thumbnailValue = formData.get('thumbnail');
+    if (thumbnailValue && thumbnailValue.trim() !== '') {
+        productData.thumbnails = [thumbnailValue.trim()];
+    }
+
+    try {
+        let response;
+        if (currentEditingId) {
+            // Actualizar producto existente
+            response = await fetch(`/api/admin/products/${currentEditingId}`, {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(productData)
+            });
+        } else {
+            // Crear nuevo producto
+            response = await fetch('/api/admin/products', {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(productData)
+            });
+        }
+
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showMessage(currentEditingId ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente', 'success');
+            resetForm();
+            loadProducts();
+        } else {
+            showMessage(result.message || 'Error al procesar el producto', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('Error de conexión', 'error');
+    }
+});
+
+// Cargar todos los productos
+async function loadProducts() {
+    try {
+        // Solicitar un límite alto para obtener todos los productos
+        const response = await fetch('/api/admin/products?limit=1000', {
+            headers: getAuthHeaders()
+        });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            // Manejar tanto respuestas paginadas como no paginadas
+            const products = result.payload?.docs || result.payload || result.docs || [];
+            displayProducts(products);
+        } else {
+            showMessage('Error al cargar productos', 'error');
+        }
+    } catch (error) {
+        console.error('Error al cargar productos:', error);
+        showMessage('Error de conexión al cargar productos', 'error');
+    }
+}
+
+// Mostrar productos en la interfaz
+function displayProducts(products) {
+    const container = document.getElementById('products-container');
+    
+    console.log('Productos recibidos:', products); // Debug log
+    
+    if (!products || products.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666;">No hay productos disponibles</p>';
+        return;
+    }
+
+    const productsHtml = products.map(product => {
+        // Asegurar que todos los campos existen
+        const safeProduct = {
+            _id: product._id || product.id || '',
+            title: product.title || 'Sin título',
+            code: product.code || 'Sin código',
+            price: product.price || 0,
+            stock: product.stock || 0,
+            category: product.category || 'Sin categoría',
+            description: product.description || 'Sin descripción'
+        };
+        
+        return `
+            <div class="product-card" id="product-${safeProduct._id}">
+                <!-- Vista normal (mostrar datos) -->
+                <div class="product-view" id="view-${safeProduct._id}">
+                    <h3>${safeProduct.title}</h3>
+                    <div class="product-info">
+                        <p><strong>Código:</strong> ${safeProduct.code}</p>
+                        <p><strong>Precio:</strong> $${safeProduct.price}</p>
+                        <p><strong>Stock:</strong> ${safeProduct.stock}</p>
+                        <p><strong>Categoría:</strong> ${safeProduct.category}</p>
+                    </div>
+                    <p><strong>Descripción:</strong> ${safeProduct.description}</p>
+                    <div class="product-actions">
+                        <button class="btn-edit" onclick="enableEditMode('${safeProduct._id}')">✏️ Editar</button>
+                        <button class="btn-delete" onclick="deleteProduct('${safeProduct._id}')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                
+                <!-- Vista de edición (campos editables) -->
+                <div class="product-edit hidden" id="edit-${safeProduct._id}">
+                    <div class="edit-field">
+                        <label>Título:</label>
+                        <input type="text" id="edit-title-${safeProduct._id}" value="${safeProduct.title}" class="edit-input">
+                    </div>
+                    <div class="edit-info-grid">
+                        <div class="edit-field">
+                            <label>Código:</label>
+                            <input type="text" id="edit-code-${safeProduct._id}" value="${safeProduct.code}" class="edit-input">
+                        </div>
+                        <div class="edit-field">
+                            <label>Precio:</label>
+                            <input type="number" id="edit-price-${safeProduct._id}" value="${safeProduct.price}" class="edit-input" step="0.01">
+                        </div>
+                        <div class="edit-field">
+                            <label>Stock:</label>
+                            <input type="number" id="edit-stock-${safeProduct._id}" value="${safeProduct.stock}" class="edit-input">
+                        </div>
+                        <div class="edit-field">
+                            <label>Categoría:</label>
+                            <input type="text" id="edit-category-${safeProduct._id}" value="${safeProduct.category}" class="edit-input">
+                        </div>
+                    </div>
+                    <div class="edit-field">
+                        <label>Descripción:</label>
+                        <textarea id="edit-description-${safeProduct._id}" class="edit-textarea">${safeProduct.description}</textarea>
+                    </div>
+                    <div class="edit-actions">
+                        <button class="btn-save" onclick="saveProduct('${safeProduct._id}')">✅ Guardar</button>
+                        <button class="btn-cancel" onclick="cancelEditMode('${safeProduct._id}')">❌ Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = productsHtml;
+}
+
+// Activar modo de edición in-line
+function enableEditMode(productId) {
+    // Ocultar vista normal
+    document.getElementById(`view-${productId}`).classList.add('hidden');
+    // Mostrar vista de edición
+    document.getElementById(`edit-${productId}`).classList.remove('hidden');
+    
+    // Mensaje informativo
+    showMessage('Modo edición activado. Modifica los campos y haz clic en "Guardar".', 'info');
+}
+
+// Cancelar modo de edición
+function cancelEditMode(productId) {
+    // Mostrar vista normal
+    document.getElementById(`view-${productId}`).classList.remove('hidden');
+    // Ocultar vista de edición
+    document.getElementById(`edit-${productId}`).classList.add('hidden');
+    
+    showMessage('Edición cancelada.', 'info');
+}
+
+// Guardar producto editado
+async function saveProduct(productId) {
+    try {
+        // Recopilar datos de los campos de edición
+        const updateData = {
+            title: document.getElementById(`edit-title-${productId}`).value.trim(),
+            code: document.getElementById(`edit-code-${productId}`).value.trim(),
+            price: parseFloat(document.getElementById(`edit-price-${productId}`).value),
+            stock: parseInt(document.getElementById(`edit-stock-${productId}`).value),
+            category: document.getElementById(`edit-category-${productId}`).value.trim(),
+            description: document.getElementById(`edit-description-${productId}`).value.trim()
+        };
+
+        // Validación básica
+        if (!updateData.title || !updateData.code || !updateData.category) {
+            showMessage('❌ Título, código y categoría son requeridos.', 'error');
+            return;
+        }
+
+        if (isNaN(updateData.price) || updateData.price <= 0) {
+            showMessage('❌ El precio debe ser un número positivo.', 'error');
+            return;
+        }
+
+        if (isNaN(updateData.stock) || updateData.stock < 0) {
+            showMessage('❌ El stock debe ser un número no negativo.', 'error');
+            return;
+        }
+
+        // Mostrar indicador de guardado
+        showMessage('💾 Guardando cambios...', 'info');
+
+        // Hacer petición PUT al servidor
+        const response = await fetch(`/api/admin/products/${productId}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(updateData)
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            showMessage('✅ Producto actualizado exitosamente!', 'success');
+            
+            // Recargar la lista de productos para mostrar los cambios
+            loadProducts();
+        } else {
+            showMessage(`❌ Error al actualizar: ${result.message}`, 'error');
+        }
+
+    } catch (error) {
+        console.error('Error al guardar producto:', error);
+        showMessage('❌ Error de conexión al guardar producto', 'error');
+    }
+}
+
+// Eliminar producto
+async function deleteProduct(productId) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/admin/products/${productId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showMessage('Producto eliminado exitosamente', 'success');
+            loadProducts();
+        } else {
+            showMessage(result.message || 'Error al eliminar el producto', 'error');
+        }
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        showMessage('Error de conexión al eliminar producto', 'error');
+    }
+}
+
+// Cancelar edición
+function cancelEdit() {
+    resetForm();
+}
+
+// Resetear formulario
+function resetForm() {
+    document.getElementById('productForm').reset();
+    document.getElementById('productId').value = '';
+    currentEditingId = null;
+    
+    // Restaurar títulos y botones
+    document.getElementById('form-title').textContent = 'Crear Nuevo Producto';
+    document.getElementById('form-title').style.color = '#ffa500';
+    document.getElementById('submit-btn').textContent = 'Crear Producto';
+    document.getElementById('submit-btn').style.background = '#007bff';
+    
+    // Quitar estilos de edición
+    const formSection = document.querySelector('.product-form-section');
+    formSection.style.border = '';
+    formSection.style.boxShadow = '';
+    
+    // Quitar estilos de los campos
+    const formInputs = formSection.querySelectorAll('input, textarea');
+    formInputs.forEach(input => {
+        input.style.border = '';
+        input.style.boxShadow = '';
+    });
+    
+    hideMessage();
+}
+
+// Mostrar mensaje
+function showMessage(text, type) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = text;
+    messageDiv.className = `message ${type}`;
+    messageDiv.classList.remove('hidden');
+    
+    // Ocultar el mensaje después de 5 segundos
+    setTimeout(() => {
+        hideMessage();
+    }, 5000);
+}
+
+// Ocultar mensaje
+function hideMessage() {
+    const messageDiv = document.getElementById('message');
+    messageDiv.classList.add('hidden');
+}
+</script>

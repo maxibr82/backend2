@@ -23,6 +23,25 @@
     flex-direction: column;
     align-items: center;
     animation: fadeInDown 1s;
+    position: relative;
+  }
+  .volver-btn {
+    display: block;
+    position: absolute;
+    left: 18px;
+    top: 18px;
+    background: #1da81d;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1em;
+    border-radius: 7px;
+    padding: 7px 18px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .volver-btn:hover {
+    background: #ffa500;
+    color: #181818;
   }
   .user-login-box h2 {
     color: #ffa500;
@@ -69,7 +88,7 @@
     min-height: 20px;
     font-size: 1.1em;
   }
-  .user-login-box a {
+  .user-login-box a:not(.volver-btn) {
     color: #ffa500;
     margin-top: 18px;
     text-align: center;
@@ -78,7 +97,7 @@
     display: block;
     transition: color 0.2s;
   }
-  .user-login-box a:hover {
+  .user-login-box a:not(.volver-btn):hover {
     color: #fff;
   }
   @keyframes fadeInDown {
@@ -89,6 +108,7 @@
 
 <div class="login-center-container">
   <div class="user-login-box">
+    <a href="/products" class="volver-btn">Volver</a>
     <h2>Iniciar Sesión</h2>
     <form id="loginForm">
         <input type="email" name="email" placeholder="Email" required>
@@ -97,6 +117,7 @@
     </form>
     <div id="login-message" class="message"></div>
     <a href="/register">¿No tienes cuenta? Regístrate</a>
+    <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
   </div>
 </div>
 <script>
@@ -118,17 +139,33 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     if(result.status === 'success') {
         msg.innerText = 'Login exitoso';
         msg.style.color = '#1da81d';
+        
+        // Guardar información del usuario
         localStorage.setItem('user', JSON.stringify({
             first_name: result.user?.first_name || '',
             last_name: result.user?.last_name || '',
             email: data.email,
-            cart: result.user?.cart || ''
+            cart: result.user?.cart || '',
+            role: result.user?.role || 'user'
         }));
+        
+        // Guardar token JWT si existe
+        if(result.token) {
+            localStorage.setItem('authToken', result.token);
+        }
+        
         if(result.user?.cart) {
             localStorage.setItem('cartId', result.user.cart);
         }
+        
         form.reset();
-        window.location.href = "/products";
+        
+        // Redireccionar según el rol del usuario
+        if(result.user?.role === 'admin') {
+            window.location.href = "/admin/products";
+        } else {
+            window.location.href = "/products";
+        }
     } else {
         msg.innerText = result.message || 'Error al iniciar sesión';
         msg.style.color = '#d51515';

@@ -12,6 +12,9 @@ import productRouter from './routes/productRouter.js';
 import cartRouter from './routes/cartRouter.js';
 import viewsRouter from './routes/viewsRouter.js';
 import userRouter from './routes/user.router.js';
+import adminRouter from './routes/adminRouter.js';
+import passwordResetRouter from './routes/passwordResetRouter.js';
+import ticketRouter from './routes/ticketRouter.js';
 import __dirname from './utils/constantsUtil.js';
 import websocket from './websocket.js';
 
@@ -25,7 +28,13 @@ mongoose.connect(uri)
     .catch(err => console.error('Error de conexión a MongoDB:', err));
 
 // Configuración de Handlebars
-app.engine('handlebars', handlebars.engine());
+app.engine('handlebars', handlebars.engine({
+    helpers: {
+        multiply: function(a, b) {
+            return a * b;
+        }
+    }
+}));
 app.set('views', __dirname + '/../views');
 app.set('view engine', 'handlebars');
 
@@ -53,6 +62,9 @@ app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/password-reset', passwordResetRouter);
+app.use('/api/tickets', ticketRouter);
 app.use('/', viewsRouter);
 
 const PORT = process.env.PORT || 8080;

@@ -1,37 +1,44 @@
 import { Router } from 'express';
-import { productDBManager } from '../dao/productDBManager.js';
+import ProductService from '../services/ProductService.js';
 import { uploader } from '../utils/multerUtil.js';
+import { ErrorResponseDTO } from '../dto/ResponseDTO.js';
 
 const router = Router();
-const ProductService = new productDBManager();
+const productService = new ProductService();
 
 router.get('/', async (req, res) => {
-    const result = await ProductService.getAllProducts(req.query);
-
-    res.send({
-        status: 'success',
-        payload: result
-    });
+    try {
+        const result = await productService.getAllProducts(req.query);
+        res.send(result.toResponse ? result.toResponse() : result);
+    } catch (error) {
+        if (error instanceof ErrorResponseDTO) {
+            res.status(400).send(error.toResponse());
+        } else {
+            res.status(500).send({
+                status: 'error',
+                message: 'Error interno del servidor'
+            });
+        }
+    }
 });
 
 router.get('/:pid', async (req, res) => {
-
     try {
-        const result = await ProductService.getProductByID(req.params.pid);
-        res.send({
-            status: 'success',
-            payload: result
-        });
+        const result = await productService.getProductById(req.params.pid);
+        res.send(result.toResponse());
     } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
+        if (error instanceof ErrorResponseDTO) {
+            res.status(400).send(error.toResponse());
+        } else {
+            res.status(500).send({
+                status: 'error',
+                message: 'Error interno del servidor'
+            });
+        }
     }
 });
 
 router.post('/', uploader.array('thumbnails', 3), async (req, res) => {
-
     if (req.files) {
         req.body.thumbnails = [];
         req.files.forEach((file) => {
@@ -40,21 +47,21 @@ router.post('/', uploader.array('thumbnails', 3), async (req, res) => {
     }
 
     try {
-        const result = await ProductService.createProduct(req.body);
-        res.send({
-            status: 'success',
-            payload: result
-        });
+        const result = await productService.createProduct(req.body);
+        res.send(result.toResponse());
     } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
+        if (error instanceof ErrorResponseDTO) {
+            res.status(400).send(error.toResponse());
+        } else {
+            res.status(500).send({
+                status: 'error',
+                message: 'Error interno del servidor'
+            });
+        }
     }
 });
 
 router.put('/:pid', uploader.array('thumbnails', 3), async (req, res) => {
-
     if (req.files) {
         req.body.thumbnails = [];
         req.files.forEach((file) => {
@@ -63,32 +70,33 @@ router.put('/:pid', uploader.array('thumbnails', 3), async (req, res) => {
     }
 
     try {
-        const result = await ProductService.updateProduct(req.params.pid, req.body);
-        res.send({
-            status: 'success',
-            payload: result
-        });
+        const result = await productService.updateProduct(req.params.pid, req.body);
+        res.send(result.toResponse());
     } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
+        if (error instanceof ErrorResponseDTO) {
+            res.status(400).send(error.toResponse());
+        } else {
+            res.status(500).send({
+                status: 'error',
+                message: 'Error interno del servidor'
+            });
+        }
     }
 });
 
 router.delete('/:pid', async (req, res) => {
-
     try {
-        const result = await ProductService.deleteProduct(req.params.pid);
-        res.send({
-            status: 'success',
-            payload: result
-        });
+        const result = await productService.deleteProduct(req.params.pid);
+        res.send(result.toResponse());
     } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
+        if (error instanceof ErrorResponseDTO) {
+            res.status(400).send(error.toResponse());
+        } else {
+            res.status(500).send({
+                status: 'error',
+                message: 'Error interno del servidor'
+            });
+        }
     }
 });
 

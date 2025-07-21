@@ -14,10 +14,11 @@ async function addToCart(pid) {
             return alert(createCart.message);
         }
 
-        console.log(createCart);
+        console.log('Carrito creado:', createCart);
 
-        cartId = createCart.payload._id;
-        localStorage.setItem('cartId', cartId)
+        // Extraer el cartId del response corregido
+        cartId = createCart.data.id;
+        localStorage.setItem('cartId', cartId);
     }
 
     const addProductResponse = await fetch(`/api/carts/${cartId}/product/${pid}`, {

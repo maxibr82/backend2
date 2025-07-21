@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "../config/passport.js";
 import jwt from "jsonwebtoken";
+import { UserDTO } from "../dto/UserDTO.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -24,8 +25,18 @@ router.post("/login", (req, res, next) => {
 
 // Current
 router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
-    const { _id, first_name, last_name, email, age, cart, role } = req.user;
-    res.json({ status: "success", user: { _id, first_name, last_name, email, age, cart, role } });
+    try {
+        const userDTO = new UserDTO(req.user);
+        res.json({ 
+            status: "success", 
+            user: userDTO.toLegacyResponse() 
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            status: "error", 
+            message: "Error al obtener información del usuario" 
+        });
+    }
 });
 
 export default router;

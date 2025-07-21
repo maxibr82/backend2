@@ -1,7 +1,21 @@
 <div class="box">
     <div class="view-products"><a id="button-products" class="button" href="/products">Volver</a></div>
     <h1>Productos</h1>
-    <button id="empty-cart-btn" class="button" style="background:#d51515;margin-bottom:15px;">Vaciar carrito</button>
+    <div style="margin-bottom:15px;">
+        <button id="empty-cart-btn" class="button" style="background:#d51515;margin-right:10px;">Vaciar carrito</button>
+        {{#if products}}
+        <button id="checkout-btn" class="button" style="background:#28a745;">Finalizar Compra</button>
+        {{/if}}
+    </div>
+    
+    {{#if products}}
+    <div class="cart-summary" style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;">
+        <h3>Resumen del Carrito</h3>
+        <p><strong>Total de productos:</strong> {{products.length}}</p>
+        <p><strong>Total a pagar:</strong> $<span id="cart-total">0</span></p>
+    </div>
+    {{/if}}
+    
     <div class="products-box">
         {{#each products}}
             <div class="product-card">
@@ -10,7 +24,14 @@
                 <p>Categoria: {{this.product.category}}</p>
                 <p>Precio: $ {{this.product.price}}</p>
                 <p>Cantidad: {{this.quantity}}</p>
-                <button class="remove-product-btn button" style="background:#d51515;" data-pid="{{this.product._id}}">Eliminar</button>
+                <p><strong>Subtotal: $ {{multiply this.product.price this.quantity}}</strong></p>
+                <button class="remove-product-btn button" style="background:#d51515;" data-pid="{{this.product.id}}">Eliminar</button>
+            </div>
+        {{else}}
+            <div style="text-align:center;padding:40px;">
+                <h3>Tu carrito está vacío</h3>
+                <p>¡Agrega algunos productos para comenzar!</p>
+                <a href="/products" class="button">Ver Productos</a>
             </div>
         {{/each}}
     </div>
